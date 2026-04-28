@@ -40,4 +40,16 @@ This application is deployed on Streamlit
 
 https://previsione-prezzi-milano.streamlit.app/
 
+##  Work in Progress
+I am currently working to improve the model's accuracy (targeting an R² > 0.60). My next steps include:
+- Possible **Sentiment Analysis**: Implementing NLP on user reviews to capture "quality" and "hospitality" scores.
+- **Enhanced Geospatial Data**: Adding proximity to Milan's Metro stations and main attractions (e.g., San Siro, Navigli).
+- **Hyperparameter Tuning**: Running a more extensive GridSearch to squeeze more performance out of XGBoost.
+
+
+
+
+
+
+
 
