@@ -32,6 +32,10 @@ Neighborhood Price Median (Location prestige)
 
 Distance from Duomo (Proximity to center)
 
+Below is the SHAP Summary Plot, showing how different features influence the final price:
+
+![SHAP Summary Plot](shap_summary.png)
+
 This application is deployed on Streamlit
 
 https://previsione-prezzi-milano.streamlit.app/
