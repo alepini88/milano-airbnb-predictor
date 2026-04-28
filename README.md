@@ -5,3 +5,35 @@ This project aims to suggest the optimal nightly price for new Airbnb listings i
 Project Overview
 
 The goal is to help hosts determine a competitive price based on location, amenities, and historical data. I followed a full Data Science pipeline: from raw data cleaning to model deployment.
+
+Tech Stack
+
+Python (Pandas, Numpy)
+
+Machine Learning: XGBoost, Scikit-learn
+
+Model Interpretation: SHAP
+
+Deployment: Streamlit Cloud
+
+Key Features & Engineering
+
+Target Encoding: Optimized neighborhood data by using median prices per area.
+
+Geospatial Analysis: Calculated the Haversine distance from the Duomo (city center) and proximity to Metro stations.
+
+Feature Engineering: Created custom metrics like bathrooms_per_person to better capture guest comfort.
+
+Outlier Removal: Focused the model on the core market (40€ - 450€) to increase reliability.
+
+Using SHAP values, I discovered that the most influential factors for pricing in Milan are:
+
+Neighborhood Price Median (Location prestige)
+
+Distance from Duomo (Proximity to center)
+
+This application is deployed on Streamlit
+
+https://previsione-prezzi-milano.streamlit.app/
+
+
