@@ -34,7 +34,7 @@ Distance from Duomo (Proximity to center)
 
 Below is the SHAP Summary Plot, showing how different features influence the final price:
 
-![SHAP Summary Plot](shap_summary.png)
+![SHAP Summary Plot](summary_plot.png)
 
 This application is deployed on Streamlit
 
