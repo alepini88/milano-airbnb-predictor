@@ -36,7 +36,7 @@ Below is the SHAP Summary Plot, showing how different features influence the fin
 
 ![SHAP Summary Plot](summary_plot.png)
 
-This application is deployed on Streamlit
+This application is deployed on Streamlit - preliminary version (to be improved)
 
 https://previsione-prezzi-milano.streamlit.app/
 
