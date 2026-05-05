@@ -24,7 +24,7 @@ The goal is to help hosts determine a competitive price based on location, ameni
 
 - Feature Engineering: Created custom metrics like bathrooms_per_person to better capture guest comfort.
 
-- Outlier Removal: Focused the model on the core market (40€ - 450€) to increase reliability.
+- Outlier Removal: Focused the model on the core market (20€ - 390€) to increase reliability.
 
 ## Using SHAP values, I discovered that the most influential factors for pricing in Milan are:
 
