@@ -40,6 +40,10 @@ This application is deployed on Streamlit - preliminary version (to be improved)
 
 https://previsione-prezzi-milano.streamlit.app/
 
+## Model Performance & Insights
+
+The model was trained using XGBoost, achieving an $R^{2}$ score of approximately 0.50 and a Mean Absolute Error (MAE) of 33€. While these metrics may seem modest, they probably reflect the high volatility of the Milanese short-term rental market, which is heavily influenced by subjective factors like interior design quality and host reputation (data not available in the public dataset).
+
 ##  Work in Progress
 I am currently working to improve the model's accuracy (targeting an R² > 0.60). My next steps include:
 - Possible **Sentiment Analysis**: Implementing NLP on user reviews to capture "quality" and "hospitality" scores.
