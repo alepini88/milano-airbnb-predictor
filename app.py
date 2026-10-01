@@ -3,7 +3,7 @@ import joblib
 import pandas as pd
 import numpy as np
 
-# 1. Carichiamo il "cervello" (modello) e le colonne
+# Carico i dati
 model = joblib.load('modello_airbnb.pkl')
 features = joblib.load('features.pkl')
 dict_quartieri = joblib.load('dist_quartieri.pkl')
@@ -11,7 +11,7 @@ dict_quartieri = joblib.load('dist_quartieri.pkl')
 st.title("🏠 Airbnb Milano: Suggeritore di Prezzo")
 st.write("Inserisci i dettagli del tuo alloggio per sapere a quanto affittarlo.")
 
-# 2. Creiamo i pulsanti e gli slider per l'utente
+# 2 Creo le colonne
 col1, col2 = st.columns(2)
 
 with col1:
@@ -24,22 +24,18 @@ with col2:
     reviews = st.number_input("Numero di recensioni", 0, 500, 10)
     quartiere_scelto = st.selectbox("In quale quartiere si trova l'alloggio?", list(dict_quartieri.keys()))
     valore_quartiere = dict_quartieri[quartiere_scelto]
-    # Aggiungi qui gli altri input (latitudine, longitudine, ecc.)
-
-# 3. Il tasto magico
+    
 if st.button("Calcola Prezzo Ottimale"):
-    # Creiamo un dizionario con i dati inseriti dall'utente
-    # NOTA: Qui dovrai inserire TUTTE le colonne che il modello si aspetta
-    dati_utente = {f: 0 for f in features} # Inizializziamo tutto a zero
+    dati_utente = {f: 0 for f in features}
     dati_utente['accommodates'] = acc
     dati_utente['distance_from_center'] = dist
     dati_utente['number_of_reviews'] = reviews
     dati_utente['neighbourhood_price_median'] = valore_quartiere 
-    # ... compila tutte le altre variabili ...
+
 
     df_input = pd.DataFrame([dati_utente])
     
-    # Previsione!
+    # Previsione
     prezzo = model.predict(df_input)[0]
     
     st.success(f"💰 Il prezzo suggerito per la tua casa è di {prezzo:.2f} € a notte")
