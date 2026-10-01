@@ -20,37 +20,49 @@ The goal was to experiment with property and location-based features and investi
 
 ## Key Features & Engineering
 
-- Target Encoding: Optimized neighborhood data by using median prices per area.
+Some of the features explored in the project include:
 
-- Geospatial Analysis: Calculated the Haversine distance from the Duomo (city center) and proximity to Metro stations.
+- **Neighborhood information:** Used neighborhood-level median prices to capture price differences across areas.
+- **Geospatial features:** Calculated the Haversine distance from the Duomo and proximity to Milan Metro stations.
+- **Property features:** Created derived variables such as `bathrooms_per_person`.
+- **Outlier filtering:** Restricted the analysis to listings in the €20–€390 price range.
 
-- Feature Engineering: Created custom metrics like bathrooms_per_person to better capture guest comfort.
+## Model Interpretation
 
-- Outlier Removal: Focused the model on the core market (20€ - 390€) to increase reliability.
+I used SHAP values to explore how different features contributed to the model predictions.
 
-## Using SHAP values, I discovered that the most influential factors for pricing in Milan are:
+Among the most influential features were:
 
-- Neighborhood Price Median (Location prestige)
+- Neighborhood median price
+- Distance from the Duomo
 
-- Distance from Duomo (Proximity to center)
-
-Below is the SHAP Summary Plot, showing how different features influence the final price:
+The SHAP summary plot below provides an overview of the contribution of the different features:
 
 ![SHAP Summary Plot](summary_plot.png)
 
-This application is deployed on Streamlit - preliminary version (to be improved)
+## Model Performance
 
-https://previsione-prezzi-milano.streamlit.app/
+The XGBoost regression model achieved approximately:
 
-## Model Performance and Insights
+- **R²:** 0.50
+- **Mean Absolute Error (MAE):** €33
 
-The model was trained using XGBoost, achieving an $R^{2}$ score of approximately 0.50 and a Mean Absolute Error (MAE) of 33€. While these metrics may seem modest, they probably reflect the high volatility of the Milanese short-term rental market, which is heavily influenced by subjective factors like interior design quality and host reputation (data not available in the public dataset).
+These results indicate that the model captures part of the variability in listing prices, while leaving substantial room for improvement. Possible limitations include relevant factors that are not represented in the available data, such as property condition, interior design quality, and aspects related to host reputation.
 
-##  Work in Progress
-I am currently working to improve the model's accuracy (targeting an R² > 0.60). My next steps include:
-- Possible **Sentiment Analysis**: Implementing NLP on user reviews to capture "quality" and "hospitality" scores.
-- **Enhanced Geospatial Data**: Adding proximity to Milan's Metro stations and main attractions (e.g., San Siro, Navigli).
-- **Hyperparameter Tuning**: Running a more extensive GridSearch to squeeze more performance out of XGBoost.
+## Demo
+
+A preliminary Streamlit demo of the model is available here:
+
+[Airbnb Price Predictor - Milan](https://previsione-prezzi-milano.streamlit.app/)
+
+## Possible Improvements
+
+Possible directions for further development include:
+
+- Exploring information from user reviews using NLP techniques.
+- Expanding geospatial features to include additional points of interest.
+- Exploring additional models and hyperparameter tuning.
+- Improving the organization and reproducibility of the data processing and modeling workflow.
 
 
 
