@@ -59,7 +59,6 @@ A preliminary Streamlit demo of the model is available here:
 
 Possible directions for further development include:
 
-- Exploring information from user reviews using NLP techniques.
 - Expanding geospatial features to include additional points of interest.
 - Exploring additional models and hyperparameter tuning.
 - Improving the organization and reproducibility of the data processing and modeling workflow.
