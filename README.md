@@ -1,6 +1,6 @@
 # Airbnb Price Predictor - Milan 
 
-This project aims to suggest the optimal nightly price for new Airbnb listings in Milan, Italy, using Machine Learning.
+This personal data science project explores the prediction of nightly prices for Airbnb listings in Milan, Italy, using machine learning.
 
 ## Project Overview
 
