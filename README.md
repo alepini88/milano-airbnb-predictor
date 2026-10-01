@@ -4,7 +4,9 @@ This personal data science project explores the prediction of nightly prices for
 
 ## Project Overview
 
-The goal is to help hosts determine a competitive price based on location, amenities, and historical data. I followed a full Data Science pipeline: from raw data cleaning to model deployment.
+The project applies a data science workflow to real-world Airbnb data, including data cleaning, exploratory data analysis, feature engineering, regression modeling, model evaluation, and interpretation.
+
+The goal was to experiment with property and location-based features and investigate their relevance for predicting Airbnb listing prices.
 
 ## Tech Stack
 
