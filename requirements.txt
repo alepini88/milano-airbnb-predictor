@@ -1,0 +1,9 @@
+# Minimum direct dependencies used by the three notebooks.
+# Versions are intentionally not pinned until a clean environment is tested.
+notebook
+ipykernel
+pandas
+numpy
+matplotlib
+seaborn
+scikit-learn
