@@ -68,22 +68,3 @@ HistGradientBoosting was fitted on all training data after model selection, then
 | Private room MAE (487 test listings) | 61.55 |
 
 The error is measured in the original numeric price units and remains substantial. This is a random holdout from a single snapshot, not a temporal or external validation. The prediction target is an advertised nightly price, not a completed transaction price.
-
-## Notebook review and repository preparation
-
-- `01_data_understanding.ipynb`: EDA and distinctions between exploratory subsets and the final modeling population; feature-selection rationale documented.
-- `02_data_preparation.ipynb`: strictly positive price filter; explicit explanation of training-only preprocessing and fold-level refitting.
-- `03_model_training.ipynb`: consistent population filter, baseline and model comparison, out-of-fold group analysis, and final test evaluation.
-- English, impersonal Markdown documentation intended for public reading.
-- README documents the project as work in progress.
-- Repository package includes notebook files, dependency list, and `.gitignore`; source data excluded.
-
-**Verification status:** The notebook code has been syntax-checked and the user reported successful execution in VS Code. A full clean-environment run of the packaged repository has **not** been independently verified. Dependency versions are not pinned; the environment must be recorded before claiming exact reproducibility across machines.
-
-## Planned next steps
-
-1. Verify a clean run of all three notebooks in the packaged folder layout, using the matching raw snapshot.
-2. Record tested package versions and consider pinning them for reproducibility.
-3. Develop Model 2 with geographical information (e.g., coordinates and interpretable distance features); compare against Model 1 using a consistent validation design.
-4. Explore amenity-related predictors and inspect error patterns by price range and accommodation type.
-5. Document whether additional features improve generalization; avoid selecting features or tuning based on repeated test-set inspection.
