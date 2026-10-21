@@ -85,7 +85,7 @@ The MAE is measured in the original numeric price units. It is an **average abso
 └── README.md
 ```
 
-This is the **intended repository layout**; file placement and dependency files will be finalized before publication. The source dataset is not included in this README and may need to be downloaded separately in accordance with its terms of use.
+The source dataset is not included in this README and may need to be downloaded separately in accordance with its terms of use.
 
 ## Reproducing Model 1
 
