@@ -47,7 +47,7 @@ This initial model intentionally excludes geographic coordinates, distance to la
 
 ### 3. Model comparison
 
-Three approaches were compared using five-fold shuffled cross-validation on the training set. **Mean absolute error (MAE)** is the primary metric; R² is reported as a complementary measure.
+Three approaches were compared using five-fold shuffled cross-validation on the training set. **Mean absolute error (MAE)** is the primary metric, R² is reported as a complementary measure.
 
 | Model | Cross-validation MAE (mean ± SD) | Cross-validation R² (mean ± SD) |
 | --- | ---: | ---: |
