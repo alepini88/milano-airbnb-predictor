@@ -8,7 +8,7 @@ This project investigates how well the advertised nightly price of an Airbnb lis
 
 The project is developed incrementally. **Model 1** covers data exploration, preparation, model comparison, and a final holdout evaluation. Subsequent models are planned but have **not yet been implemented or evaluated**.
 
-**Prediction target:** the advertised nightly price in the source listings data, not the final amount paid by a guest or the price of a completed booking. Prices are analyzed in the numeric units shown in the source file; the currency has not been independently verified.
+**Prediction target:** the advertised nightly price in the source listings data, not the final amount paid by a guest or the price of a completed booking. Prices are analyzed in the numeric units shown in the source file. 
 
 ## Data and scope
 
