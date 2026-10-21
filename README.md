@@ -4,7 +4,7 @@
 
 ## Project overview
 
-This project investigates how well the advertised nightly price of an Airbnb listing in Milan can be estimated from information about the property. The initial goal is to establish a reproducible benchmark using structural listing attributes, then assess whether additional information—particularly location—improves predictive performance.
+This project investigates how well the advertised nightly price of an Airbnb listing in Milan can be estimated from information about the property. The initial goal is to establish a reproducible benchmark using structural listing attributes, then assess whether additional information (particularly location) improves predictive performance.
 
 The project is developed incrementally. **Model 1** covers data exploration, preparation, model comparison, and a final holdout evaluation. Subsequent models are planned but have **not yet been implemented or evaluated**.
 
