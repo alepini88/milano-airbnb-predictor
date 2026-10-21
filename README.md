@@ -117,8 +117,6 @@ The following work is **planned**, not completed:
 4. **Compare models consistently:** retain the same evaluation principles, compare new approaches against Model 1 using training-only model selection, and avoid using the original holdout repeatedly for tuning.
 5. **Extend error analysis:** examine error patterns across price ranges and accommodation segments, and consider a more realistic temporal or out-of-sample evaluation if suitable data become available.
 
-The purpose of these stages is to test measurable improvements, not to assume that adding features or more complex models will necessarily produce better predictions.
-
 ## Data attribution
 
 Listing data are sourced from [Inside Airbnb](https://insideairbnb.com/). Please consult the source for dataset availability, documentation, and applicable usage conditions.
