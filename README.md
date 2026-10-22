@@ -98,25 +98,20 @@ The tree lists the confirmed notebook filenames relevant to these two models; ch
 1. Obtain the corresponding Milan snapshot from [Inside Airbnb](https://insideairbnb.com/get-the-data/) and place `listings.csv.gz` at `data/raw/listings.csv.gz`. The expected raw shape is **25,338 × 90**; other snapshots may yield different results.
 2. Set up Python with Jupyter, pandas, NumPy, SciPy, Matplotlib, seaborn, and scikit-learn.
 3. Run the notebooks in numerical order, restarting the kernel before a complete run. Each modeling notebook loads the source data independently; variables do not need to persist between notebooks.
-4. Consult `03_model_training.ipynb` for Model 1 and `05_geographic_data_preparation.ipynb` / `06_geographic_model_training.ipynb` for the geographic extension.
-
-Notebook 06 has been rerun from start to finish without execution errors in the development environment. A pinned dependency file and a clean-environment reproducibility check are still outstanding.
+   
 
 ## Limitations
 
 - **Restricted population:** only two accommodation types and advertised nightly prices up to 1,000 are modeled.
-- **Unverified currency:** numeric price units are used without assigning a monetary denomination.
 - **Snapshot-based validation:** random splitting of one snapshot does not establish performance on future listings or across market conditions.
 - **Comparison caveat:** identical filtering and random-split settings do not independently prove identical listing-level holdout membership across Model 1 and Model 2.
 - **Predictive, not causal:** location and property associations do not establish causal price effects. The target also excludes fees and completed booking outcomes.
-- **Remaining error:** Model 2 improves predictive accuracy but still leaves substantial unexplained variation.
 
 ## Next steps
 
 1. **Investigate amenities (Model 3):** inspect the raw amenity field, define usable features, and assess their incremental predictive value without target leakage.
 2. **Preserve evaluation discipline:** compare amenity configurations using training-only cross-validation, avoid repeated test-driven tuning, and establish a consistent holdout comparison.
-3. **Improve reproducibility and documentation:** record dependency versions, validate a clean-environment run, review repository organization, and update `PROJECT_LOG.md`.
-4. **Extend diagnostics:** assess error patterns by price range and accommodation type; consider temporal or genuinely out-of-sample validation if suitable data become available.
+3. **Extend diagnostics:** assess error patterns by price range and accommodation type; consider temporal or genuinely out-of-sample validation if suitable data become available.
 
 ## Data attribution
 
