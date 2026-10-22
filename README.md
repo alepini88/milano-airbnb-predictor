@@ -1,74 +1,78 @@
 # Milan Airbnb Nightly Price Prediction
 
-**Status: Work in progress — Model 1 completed; further feature development planned.**
+**Status: Work in progress — structural and geographic models completed; amenity-based feature development planned.**
 
 ## Project overview
 
-This project investigates how well the advertised nightly price of an Airbnb listing in Milan can be estimated from information about the property. The initial goal is to establish a reproducible benchmark using structural listing attributes, then assess whether additional information (particularly location) improves predictive performance.
+This project investigates how well the advertised nightly price of an Airbnb listing in Milan can be predicted from property characteristics. It follows an incremental approach: establish a structural-feature benchmark (**Model 1**), measure the contribution of geographic information (**Model 2**), and then investigate additional listing attributes.
 
-The project is developed incrementally. **Model 1** covers data exploration, preparation, model comparison, and a final holdout evaluation. Subsequent models are planned but have **not yet been implemented or evaluated**.
-
-**Prediction target:** the advertised nightly price in the source listings data, not the final amount paid by a guest or the price of a completed booking. Prices are analyzed in the numeric units shown in the source file. 
+**Prediction target:** the advertised nightly price in the source listings data, not the final amount paid by a guest or a completed transaction. All errors are reported in the original numeric price units; the currency has not been independently verified.
 
 ## Data and scope
 
 - **Source:** [Inside Airbnb](https://insideairbnb.com/get-the-data/), Milan listings snapshot, September 2026.
 - **Raw dataset:** 25,338 listings and 90 columns.
-- **Model 1 population:** `Entire home/apt` and `Private room` listings with a valid, strictly positive nightly price of **1,000 or less**.
-- **Modeling sample:** 21,314 listings, comprising 18,877 entire homes/apartments and 2,437 private rooms.
-- **Train/test split:** 80% / 20%, stratified by `room_type` (`random_state=42`): 17,051 training observations and 4,263 test observations.
+- **Modeling population:** `Entire home/apt` and `Private room` listings with a valid, strictly positive advertised nightly price of **1,000 or less**.
+- **Final sample:** 21,314 listings (18,877 entire homes/apartments; 2,437 private rooms).
+- **Train/test split:** 80% / 20%, stratified by `room_type`, `random_state=42` (17,051 training; 4,263 test observations).
 
-The price ceiling defines the scope of this first experiment. Listings above 1,000 are not assumed to be erroneous. Findings therefore apply to the selected property types and price range, rather than to the entire Milan short-term rental market.
+The price ceiling is a scope decision, not an assertion that higher prices are invalid. Results therefore do not describe all Milan short-term rental listings.
 
-## Completed work: Model 1
+## Modeling approach
 
-### 1. Data understanding and exploratory analysis
+### Model 1 — Structural features
 
-The exploratory notebook examines the price distribution, extreme advertised prices, price availability, accommodation types, guest capacity, property categories, and missing structural information. It also examines the free-text bathroom descriptions used to construct two predictors.
+Exploratory analysis examined prices, accommodation types, capacity, property categories, missing data, and free-text bathroom descriptions. The initial model uses seven predictors:
 
-The exploration starts from the full dataset. Some descriptive comparisons use the two selected accommodation types **before** the final price filter is applied; the modeling population is defined explicitly in the preparation notebook.
-
-### 2. Data preparation
-
-Model 1 uses seven structural predictors:
-
-| Numeric predictors | Categorical predictors |
+| Numeric | Categorical |
 | --- | --- |
 | `accommodates` | `room_type` |
 | `bedrooms` | `property_type` |
 | `beds` | `bathroom_type` (derived) |
 | `bathrooms_count` (derived) | |
 
-`bathrooms_count` and `bathroom_type` are extracted from `bathrooms_text`. Missing `beds` values are imputed using the median for each accommodation type, with a `beds_missing` indicator added to retain missingness information. Other numeric missing values are filled with training-set medians. Property categories appearing fewer than 30 times in the training data are grouped as `Other`, and categorical variables are one-hot encoded.
+`bathrooms_count` and `bathroom_type` are extracted from `bathrooms_text`. Missing `beds` values are imputed by room-type median with a `beds_missing` indicator; other numeric values use training-set medians. Rare `property_type` categories (fewer than 30 training observations) are grouped as `Other`, and categorical predictors are one-hot encoded.
 
-Preprocessing is included **inside each model's cross-validation pipeline**, so fitted imputations and category frequencies are learned separately for each training fold. The holdout test set is reserved for final evaluation.
+Three approaches were compared using shuffled five-fold cross-validation on the training set:
 
-This initial model intentionally excludes geographic coordinates, distance to landmarks, transit accessibility, and amenity features.
-
-### 3. Model comparison
-
-Three approaches were compared using five-fold shuffled cross-validation on the training set. **Mean absolute error (MAE)** is the primary metric, R² is reported as a complementary measure.
-
-| Model | Cross-validation MAE (mean ± SD) | Cross-validation R² (mean ± SD) |
+| Approach | CV MAE (mean ± SD) | CV R² (mean ± SD) |
 | --- | ---: | ---: |
 | Median-price baseline | 79.27 ± 2.58 | -0.067 ± 0.011 |
 | Ridge regression | 72.35 ± 2.35 | 0.218 ± 0.033 |
 | Histogram gradient boosting | **71.48 ± 2.16** | **0.240 ± 0.023** |
 
-The ± values are standard deviations across the five validation folds, **not** confidence intervals. Histogram gradient boosting was selected because it had the lowest overall cross-validation MAE and the lowest cross-validated MAE within each of the two accommodation types. The difference from Ridge is modest and is not presented as statistically significant.
+Histogram gradient boosting was selected based on cross-validation MAE. On the held-out test set, **Model 1 achieved MAE 70.70 and R² 0.227**. Its test MAE was 71.88 for entire homes/apartments (3,776 observations) and 61.55 for private rooms (487 observations).
 
-### 4. Final evaluation
+### Model 2 — Geographic features
 
-After model selection, histogram gradient boosting was fitted on the full training set and evaluated on the previously held-out test set.
+The geographic extension retains the seven structural predictors and evaluates four location variables:
 
-| Test metric | Result |
-| --- | ---: |
-| MAE | **70.70** |
-| R² | **0.227** |
-| Entire home/apt MAE (3,776 listings) | 71.88 |
-| Private room MAE (487 listings) | 61.55 |
+- `latitude` and `longitude`;
+- `neighbourhood_cleansed` (87 neighborhoods in the modeling data);
+- `distance_duomo_km`, calculated using the Haversine distance to Milan's Duomo (45.4642, 9.1916).
 
-The MAE is measured in the original numeric price units. It is an **average absolute error**, not a guarantee that individual predictions fall within that distance of the observed price. Although the model improves on the median baseline, its error remains substantial. These results come from a random split of one snapshot and do not establish performance on future listings or other time periods.
+Five feature configurations were evaluated with the same histogram gradient boosting settings and five-fold cross-validation protocol:
+
+| Feature configuration | CV MAE (mean ± SD) | CV R² (mean ± SD) |
+| --- | ---: | ---: |
+| Structural Baseline | 71.48 ± 2.16 | 0.240 ± 0.023 |
+| Distance | 62.03 ± 1.81 | 0.377 ± 0.037 |
+| Coordinates | 60.79 ± 1.96 | 0.395 ± 0.037 |
+| Neighbourhood | 62.80 ± 2.08 | 0.365 ± 0.031 |
+| All Geographic | **60.71 ± 1.73** | 0.395 ± 0.037 |
+
+**Coordinates** was selected for Model 2: it uses only `latitude` and `longitude` alongside the structural predictors, while its mean CV MAE is just 0.082 higher than the more complex All Geographic configuration. The All Geographic advantage was observed in three of five validation folds; the small difference is not treated as evidence of a meaningful performance gain.
+
+### Held-out test comparison
+
+| Metric | Model 1 — Structural | Model 2 — Coordinates |
+| --- | ---: | ---: |
+| MAE | 70.70 | **61.09** |
+| R² | 0.227 | **0.368** |
+
+Model 2 reduced test MAE by **9.61 (13.6%)** and increased R² by **0.141** relative to the recorded Model 1 results. The same filtering and split parameters were used, although exact listing-level test membership has not been independently verified across notebooks.
+
+**Evaluation discipline:** preprocessing and learned transformations are fitted within each cross-validation fold, preventing training/validation leakage. Feature configurations were selected using training-set cross-validation; the selected Model 2 was then evaluated on the holdout. The ± figures above are fold standard deviations, not confidence intervals.
 
 ## Repository structure
 
@@ -76,52 +80,44 @@ The MAE is measured in the original numeric price units. It is an **average abso
 .
 ├── data/
 │   └── raw/
-│       └── listings.csv.gz       # Source dataset, obtained separately
+│       └── listings.csv.gz       # Local source data; not committed
 ├── notebooks/
 │   ├── 01_data_understanding.ipynb
 │   ├── 02_data_preparation.ipynb
-│   └── 03_model_training.ipynb
+│   ├── 03_model_training.ipynb
+│   ├── 05_geographic_data_preparation.ipynb
+│   └── 06_geographic_model_training.ipynb
 ├── PROJECT_LOG.md               # Methodological decisions and experiment notes
 └── README.md
 ```
 
-The source dataset is not included in this README and may need to be downloaded separately in accordance with its terms of use.
+The tree lists the confirmed notebook filenames relevant to these two models; check the repository for any additional files. The raw dataset must be obtained separately and should not be uploaded to GitHub.
 
-## Reproducing Model 1
+## Reproducing the analysis
 
-1. Obtain the corresponding Milan listings snapshot from Inside Airbnb and place the compressed CSV at `data/raw/listings.csv.gz`. The expected source shape is **25,338 rows × 90 columns**; a different snapshot may produce different results.
-2. Use a Python environment with Jupyter, pandas, NumPy, Matplotlib, seaborn, and scikit-learn installed.
-3. Open the notebooks from either the repository root or the `notebooks/` directory. The notebooks resolve the dataset path from either location.
-4. Run the notebooks in order, restarting the kernel before each complete run:
-   - `01_data_understanding.ipynb` — descriptive exploration;
-   - `02_data_preparation.ipynb` — modeling sample and preprocessing checks;
-   - `03_model_training.ipynb` — cross-validation, model selection, and holdout evaluation.
+1. Obtain the corresponding Milan snapshot from [Inside Airbnb](https://insideairbnb.com/get-the-data/) and place `listings.csv.gz` at `data/raw/listings.csv.gz`. The expected raw shape is **25,338 × 90**; other snapshots may yield different results.
+2. Set up Python with Jupyter, pandas, NumPy, SciPy, Matplotlib, seaborn, and scikit-learn.
+3. Run the notebooks in numerical order, restarting the kernel before a complete run. Each modeling notebook loads the source data independently; variables do not need to persist between notebooks.
+4. Consult `03_model_training.ipynb` for Model 1 and `05_geographic_data_preparation.ipynb` / `06_geographic_model_training.ipynb` for the geographic extension.
 
-The notebooks load the source dataset independently; running one does not require variables to remain in memory from another. A pinned dependency file has not yet been finalized, so exact cross-environment reproducibility still requires verification.
+Notebook 06 has been rerun from start to finish without execution errors in the development environment. A pinned dependency file and a clean-environment reproducibility check are still outstanding.
 
 ## Limitations
 
-- **No location features in Model 1.** Neighborhood and accessibility may explain important price differences that structural attributes alone cannot capture.
-- **Restricted population.** Results cover two room types and nightly prices up to 1,000.
-- **Snapshot-based evaluation.** A random holdout from one snapshot does not measure performance over time or under market changes.
-- **Advertised prices only.** The target does not represent completed transactions or total booking costs.
-- **Limited explanatory scope.** Predictive associations should not be interpreted as causal effects on price.
+- **Restricted population:** only two accommodation types and advertised nightly prices up to 1,000 are modeled.
+- **Unverified currency:** numeric price units are used without assigning a monetary denomination.
+- **Snapshot-based validation:** random splitting of one snapshot does not establish performance on future listings or across market conditions.
+- **Comparison caveat:** identical filtering and random-split settings do not independently prove identical listing-level holdout membership across Model 1 and Model 2.
+- **Predictive, not causal:** location and property associations do not establish causal price effects. The target also excludes fees and completed booking outcomes.
+- **Remaining error:** Model 2 improves predictive accuracy but still leaves substantial unexplained variation.
 
 ## Next steps
 
-The following work is **planned**, not completed:
-
-1. **Finalize repository reproducibility:** review file organization, document package versions in a dependency file, confirm a clean run from a fresh environment, and update `PROJECT_LOG.md`.
-2. **Develop Model 2 with location information:** evaluate latitude/longitude and interpretable location-related features, such as distance to central landmarks or transit, where suitable data are available.
-3. **Assess additional listing attributes:** investigate whether selected amenities and other information available when a listing is created improve performance without introducing target leakage.
-4. **Compare models consistently:** retain the same evaluation principles, compare new approaches against Model 1 using training-only model selection, and avoid using the original holdout repeatedly for tuning.
-5. **Extend error analysis:** examine error patterns across price ranges and accommodation segments, and consider a more realistic temporal or out-of-sample evaluation if suitable data become available.
+1. **Investigate amenities (Model 3):** inspect the raw amenity field, define usable features, and assess their incremental predictive value without target leakage.
+2. **Preserve evaluation discipline:** compare amenity configurations using training-only cross-validation, avoid repeated test-driven tuning, and establish a consistent holdout comparison.
+3. **Improve reproducibility and documentation:** record dependency versions, validate a clean-environment run, review repository organization, and update `PROJECT_LOG.md`.
+4. **Extend diagnostics:** assess error patterns by price range and accommodation type; consider temporal or genuinely out-of-sample validation if suitable data become available.
 
 ## Data attribution
 
-Listing data are sourced from [Inside Airbnb](https://insideairbnb.com/). Please consult the source for dataset availability, documentation, and applicable usage conditions.
-
-
-
-
-
+Listing data are sourced from [Inside Airbnb](https://insideairbnb.com/). Consult the source for dataset availability, documentation, and applicable usage conditions.
